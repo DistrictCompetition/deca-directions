@@ -171,7 +171,7 @@ function apply(d){
  var list=test?(test.m<=rp.m?[test,rp]:[rp,test]):[rp];
  var me=document.getElementById('me');
  me.innerHTML='<div class="when">'+day+'</div><div class="evn">'+(EVN[ev]||ev)+'</div><div class="items">'+list.map(function(x){return x.h}).join('')+'</div>'+(test?'':'<div class="sm">No written test for this event.</div>');
- me.hidden=false;document.querySelector('h1').textContent='Your schedule';
+ me.hidden=false;document.querySelector('h1').textContent='Here is your schedule';
  if(ts){FIX=rm;room=rm;document.getElementById('roomchoice').hidden=true;startTab=list[0].k==='t'?0:1}else{ONLY_RP=true}
 }
 function start(){
