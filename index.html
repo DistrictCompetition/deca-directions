@@ -170,8 +170,8 @@ function apply(d){
  var rp={k:'r',h:'<div class="it"><div class="lb">Role play: report to prep</div><div class="big">'+prep+'</div><div class="sm"><b>TUC Great Hall</b>, 4th floor</div></div>',m:mins(prep)};
  var list=test?(test.m<=rp.m?[test,rp]:[rp,test]):[rp];
  var me=document.getElementById('me');
- me.innerHTML='<div class="when">'+day+'</div><div class="evn">'+(EVN[ev]||ev)+'</div><div class="items">'+list.map(function(x){return x.h}).join('')+'</div>'+(test?'':'<div class="sm">No written test for this event.</div>');
- me.hidden=false;document.querySelector('h1').textContent='Here is your schedule';
+ me.innerHTML=(d[6]?'<div class="sm"><b>'+d[6]+' DECA</b></div>':'')+'<div class="when">'+day+'</div><div class="evn">'+(EVN[ev]||ev)+'</div><div class="items">'+list.map(function(x){return x.h}).join('')+'</div>'+(test?'':'<div class="sm">No written test for this event.</div>');
+ me.hidden=false;document.querySelector('h1').textContent='Here is your schedule'+(d[5]?', '+d[5]:'');
  if(ts){FIX=rm;room=rm;document.getElementById('roomchoice').hidden=true;startTab=list[0].k==='t'?0:1}else{ONLY_RP=true}
 }
 function start(){
