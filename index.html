@@ -178,7 +178,7 @@ function start(){
  if(ONLY_RP){document.querySelector('.tabs').hidden=true;if(document.getElementById('me').hidden)document.querySelector('h1').textContent='Role play: Tangeman Great Hall'}
  show(ONLY_RP?1:startTab);
 }
-if(sid){fetch('data.json').then(function(r){return r.json()}).then(function(D){if(D[sid])apply(D[sid]);start()}).catch(function(){start()})}else start();
+if(sid){fetch('data.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(D){if(D[sid])apply(D[sid]);start()}).catch(function(){start()})}else start();
 })();
 </script>
 </body></html>
