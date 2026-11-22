@@ -19,6 +19,7 @@ h1{font-size:1.5rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .col{display:flex;flex-direction:column;gap:14px}
 .stage{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .stage svg{display:block;width:100%;height:auto}
+.ft{display:flex;align-items:center;gap:8px;margin:4px 0 10px}.ftb{flex:1;background:var(--surface);border:2px solid var(--ink);border-radius:10px;padding:10px;text-align:center}.ftb small{display:block;color:var(--muted);font-weight:700;letter-spacing:.06em;font-size:.7rem}.ftb b{font-size:1rem}.fta{font-size:1.8rem;text-align:center;color:var(--route);line-height:1}.fta small{display:block;font-size:.65rem;color:var(--muted);font-weight:600}.btn.big{display:block;text-align:center;padding:14px;font-size:1.05rem;margin-bottom:10px}
 .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .step{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;font:inherit;color:var(--ink);padding:10px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line);cursor:pointer}
 .step.on{border-color:var(--route);box-shadow:inset 4px 0 0 var(--route)}
@@ -58,26 +59,11 @@ h1{font-size:1.5rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
    <button class="dirb" id="dl2t" aria-pressed="false">Test → Role Play<small>Lindner to Tangeman (TUC)</small></button>
    <button class="dirb" id="dt2l" aria-pressed="true">Role Play → Test<small>Tangeman (TUC) to Lindner</small></button>
   </div>
-  <div class="stage">
-   <svg viewBox="0 0 700 330" role="img" aria-label="Walking path between Tangeman University Center and Carl H. Lindner Hall, about 4 to 5 minutes">
-    <rect x="0" y="0" width="700" height="330" fill="var(--blue-soft)" opacity=".35"/>
-    <path id="wp" class="route" d="M70 250 L70 150 L230 150 L350 110 L470 150 L590 150 L630 70" style="stroke-dasharray:none"/>
-    <g font-family="Inter,sans-serif" font-weight="700" font-size="14" fill="var(--ink)" text-anchor="middle">
-     <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2">
-      <circle cx="70" cy="250" r="9"/><circle cx="230" cy="150" r="9"/><circle cx="350" cy="110" r="9"/><circle cx="470" cy="150" r="9"/><circle cx="590" cy="150" r="9"/><circle cx="630" cy="70" r="9"/></g>
-     <text x="70" y="285">TUC · 200 Level</text><text x="70" y="303" font-size="12" font-weight="500" fill="var(--muted)">Bearcats Plaza</text>
-     <text x="140" y="130" font-size="13">UC MainStreet</text>
-     <text x="350" y="86" font-size="13">Steger Student Life Center</text>
-     <text x="470" y="182" font-size="13">Campus Green</text>
-     <text x="590" y="182" font-size="13">Woodside Drive</text>
-     <text x="610" y="40" font-size="13">Lindner · main doors</text>
-    </g>
-    <circle id="wdot" r="14" fill="#fff" stroke="var(--route)" stroke-width="7" cx="70" cy="250"/>
-   </svg>
-  </div>
-  <p class="note" id="wnote">About 4–5 minutes, 0.2 mile. Allow 5 minutes to walk between buildings. Diagram only, not to scale.</p>
+  <div class="ft"><div class="ftb"><small>START</small><b id="wfrom"></b></div><div class="fta" aria-hidden="true">&#10142;<small>about 5 min on foot</small></div><div class="ftb"><small>ARRIVE</small><b id="wto"></b></div></div>
+  <a class="btn fill big" id="mapw2" target="_blank" rel="noopener" href="#">Open walking map in Google Maps</a>
+  <p class="note" id="wnote">About 4–5 minutes, 0.2 mile. Allow 5 minutes to walk between buildings. Tap any step to highlight it.</p>
   <ol class="steps" id="sw"></ol>
-  <div class="row"><button class="btn fill" id="rw">Replay</button><a class="btn" id="mapw" target="_blank" rel="noopener" href="#">Walking directions in Google Maps</a></div>
+  <a id="mapw" hidden href="#"></a><button id="rw" hidden></button>
  </div></section>
 
  <section class="panel" id="pt" role="tabpanel" aria-labelledby="tt"><div class="col">
@@ -213,12 +199,12 @@ function setRoom(r,play){
 ['1210','1225','420'].forEach(function(r){$('r'+r).onclick=function(){setRoom(r,true);sync()}});
 
 /* ---------- Walk between ---------- */
-var wp=$('wp'),wd=$('wdot'),dir='t2l';
+var dir='t2l';
 var WALK={
  t2l:[
   ['Leave Tangeman at the 200 Level','From the Great Hall, take the elevator down 2 floors (400 → 300 → 200). Exit at Bearcats Plaza / Food Court.',0],
-  ['Follow UC MainStreet','Stay on the main walkway out of TUC.',.18],
-  ['Pass the Steger Student Life Center','Keep walking straight past it.',.4],
+  ['Walk out along UC MainStreet','Head out the doors and follow the wide brick walkway away from TUC.',.18],
+  ['Pass the Steger Student Life Center','It is the large building you walk beside. Keep going straight.',.4],
   ['Cross the Campus Green','Stay on the paved path across the green.',.62],
   ['Cross Woodside Drive','Use the crosswalk.',.82],
   ['Enter Carl H. Lindner Hall','Come in through the main double doors. Then use the Testing tab for your room.',1]],
@@ -230,13 +216,13 @@ var WALK={
   ['Follow UC MainStreet to Tangeman','Stay on the main walkway to the TUC 200 Level entrance (Bearcats Plaza).',.82],
   ['Go up 2 floors to the Great Hall','Take the elevator 200 → 300 → 400. See the Role play tab.',1]]
 };
-function renderW(p){var L=wp.getTotalLength(),q=dir==='t2l'?p:1-p;var pt=wp.getPointAtLength(q*L);wd.setAttribute('cx',pt.x);wd.setAttribute('cy',pt.y)}
+function renderW(p){}
 var pw=Player($('sw'),renderW,7000);
 var GM='https://www.google.com/maps/dir/?api=1&travelmode=walking&origin=';
 var TUC='Tangeman+University+Center,+2766+UC+MainStreet,+Cincinnati,+OH',LIN='Carl+H.+Lindner+Hall,+2906+Woodside+Dr,+Cincinnati,+OH';
 function setDir(d,play){
  dir=d;$('dt2l').setAttribute('aria-pressed',d==='t2l');$('dl2t').setAttribute('aria-pressed',d==='l2t');
- pw.load(WALK[d]);$('mapw').href=GM+(d==='t2l'?TUC+'&destination='+LIN:LIN+'&destination='+TUC);
+ pw.load(WALK[d]);var u=GM+(d==='t2l'?TUC+'&destination='+LIN:LIN+'&destination='+TUC);$('mapw').href=u;$('mapw2').href=u;$('wfrom').textContent=d==='t2l'?'Tangeman (TUC) · 200 Level, Bearcats Plaza':'Carl H. Lindner Hall · main doors';$('wto').textContent=d==='t2l'?'Carl H. Lindner Hall · main doors':'Tangeman (TUC) · 200 Level, Bearcats Plaza';
  if(play)pw.play();
 }
 $('dt2l').onclick=function(){setDir('t2l',true);sync()};$('dl2t').onclick=function(){setDir('l2t',true);sync()};
