@@ -214,7 +214,7 @@ function init(){
  if(TABS.indexOf(tab)<0)tab='testing';
  var name=clean(Q.get('name'),40),prep=clean(Q.get('prep'),20),test=clean(Q.get('test'),20);
  if(name||prep||test){var b=$('who');b.hidden=false;b.textContent='';var a=document.createElement('div');a.textContent=name?('Hi '+name+'!'):'Your times';b.appendChild(a);
-  var s=document.createElement('small');s.textContent=[prep?('Prep / check-in: '+prep):'',test?('Test: '+test):''].filter(Boolean).join('  ·  ');b.appendChild(s)}
+  var s=document.createElement('small');s.textContent=[prep?((Q.get('k')==='p'?'Check-in for presentation at ':'Check-in for role play at ')+prep):'',test?('Test: '+test):''].filter(Boolean).join('  ·  ');b.appendChild(s)}
  setRoom(r,false);
  show(TABS.indexOf(tab),true);
 }
