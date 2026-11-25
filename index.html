@@ -222,7 +222,7 @@ function init(){
  PERSONAL=!!(name||prep||test);
  var WT='Wait on the 2nd or 3rd floor of Tangeman (TUC) until ';
  function waitBox(items){var w=$('waitbox');w.textContent='';items.forEach(function(it){var h=document.createElement('b');h.textContent=it[0];w.appendChild(h);w.appendChild(document.createTextNode(it[1]))});w.hidden=false}
- if(!PERSONAL)waitBox([['WHERE TO GO WHEN YOU ARRIVE','Follow the WHEN YOU ARRIVE line on your timing card. Test first: go straight to your test room. Some early role plays: go straight to the Great Hall. Everyone else: wait on the 2nd or 3rd floor of Tangeman (TUC) until your check-in time.'],['BETWEEN EVENTS',WT+'your next event.']]);
+ if(!PERSONAL)waitBox([['WHERE TO GO WHEN YOU ARRIVE','Follow the WHEN YOU ARRIVE line on your timing card. Test first: go straight to your test room (be there 30 minutes early). Some early role plays: go straight to the Great Hall. Everyone else: wait on the 2nd or 3rd floor of Tangeman (TUC) until your check-in time.'],['BETWEEN EVENTS','Before a role play or presentation: wait on the 2nd or 3rd floor of Tangeman (TUC) until your check-in time. Before a test: be at your test room 30 minutes early.']]);
  if(PERSONAL){
   var qr=Q.get('room')||'',hasTest=['1210','1225','417','419'].indexOf(qr)>=0;
   $('rooms').hidden=true;
@@ -246,8 +246,8 @@ function init(){
   $('trl').textContent=(testFirst?'2':'1')+' · '+(pres?'Your presentation':'Your role play');
   tab=testFirst?'testing':'roleplay';
   FLYROOM=r;FLYRP=rpw;FLYKIND=tuc?'tuc':(testFirst?'testfirst_lindner':'rpfirst_lindner');
-  if(testFirst)waitBox([['WHEN YOU ARRIVE','Go straight to your test room ('+(tuc?'TUC ':'Lindner ')+r+').'],['AFTER YOUR TEST','Go to Tangeman (TUC). '+WT+'your check-in time ('+prep+').']]);
-  else waitBox([['WHEN YOU ARRIVE',early?'Go straight to the Great Hall (TUC 465, 4th floor).':WT+'your check-in time ('+prep+').'],['AFTER YOUR '+rpw.toUpperCase(),WT+'it is time to go to your test.']]);
+  if(testFirst)waitBox([['WHEN YOU ARRIVE','Go straight to your test room ('+(tuc?'TUC ':'Lindner ')+r+'). Be there by 8:30 AM, 30 minutes before your test.'],['AFTER YOUR TEST','Go to Tangeman (TUC). '+WT+'your check-in time ('+prep+').']]);
+  else waitBox([['WHEN YOU ARRIVE',early?'Go straight to the Great Hall (TUC 465, 4th floor).':WT+'your check-in time ('+prep+').'],['AFTER YOUR '+rpw.toUpperCase(),Q.get('g')==='1'?'Go to your test room ('+(tuc?'TUC ':'Lindner ')+r+') immediately after your '+rpw+' ends.':'Be at your test room ('+(tuc?'TUC ':'Lindner ')+r+') by 10:30 AM, 30 minutes before your test.']]);
  }
  setRoom(r,false);
  show(TABS.indexOf(tab),true);
@@ -277,26 +277,28 @@ function angDiff(a,b){return ((b-a+540)%360)-180}
 /* Build the scene list for this student. kind: 'testfirst_lindner' | 'rpfirst_lindner' | 'tuc' | 'notest' | 'general' */
 function scenes(kind,room,rp){
  var S=[];
- S.push({cap:'Bus drop-off',sub:'Your bus drops you here.',hold:DROP,ms:2600,zoom:17.3,pitch:55});
+ S.push({cap:'Your day on campus',sub:'Bus drop-off (left), Tangeman University Center (teal) and Lindner Hall (blue, top right).',fit:true,ms:4500});
+ S.push({cap:'Bus drop-off',sub:'Your bus drops you here.',hold:DROP,ms:2800,zoom:16.6,pitch:35});
  S.push({cap:'Walk to Tangeman (TUC)',sub:'Follow the path to the west entrance of Tangeman University Center (3rd floor, by the Bearcat store).',path:R_DROP_WEST,ms:7000,hl:'tuc'});
  if(kind==='testfirst_lindner'){
   S.push({cap:'Walk through Tangeman',sub:'Go through the building to the northeast doors.',path:R_THROUGH,dashed:true,ms:3500,hl:'tuc'});
   S.push({cap:'Walk to Lindner Hall',sub:'Head to the Lindner Hall main entrance for your test in Room '+room+'.',path:R_NE_LIND,ms:8000,hl:'lind'});
-  S.push({cap:'Your test: Lindner '+room,sub:'Room '+room+' is on the 1st floor. Use the Test tab for the inside route.',hold:LIND,ms:3200,hl:'lind',zoom:18.2});
+  S.push({cap:'Your test: Lindner '+room,sub:'Room '+room+' is on the 1st floor. Be there by 8:30 AM. Use the Test tab for the inside route.',hold:LIND,ms:3200,hl:'lind',zoom:16.8});
   S.push({cap:'After your test',sub:'Walk back to Tangeman (northeast doors).',path:rev(R_NE_LIND),ms:7000,hl:'tuc'});
-  S.push({cap:'Your '+rp+': Great Hall',sub:'Wait on the 2nd or 3rd floor of Tangeman until your check-in time, then go up to the Great Hall (4th floor).',hold:[-84.5175,39.13155],ms:4200,hl:'tuc',zoom:18.2});
+  S.push({cap:'Your '+rp+': Great Hall',sub:'Wait on the 2nd or 3rd floor of Tangeman until your check-in time, then go up to the Great Hall (4th floor).',hold:[-84.5175,39.13155],ms:4200,hl:'tuc',zoom:16.8});
  } else if(kind==='rpfirst_lindner'){
-  S.push({cap:'Your '+rp+': Great Hall',sub:'Inside Tangeman, the Great Hall is on the 4th floor. Use the '+(rp==='presentation'?'Presentation':'Role play')+' tab for the inside route.',hold:[-84.5175,39.13155],ms:4200,hl:'tuc',zoom:18.2});
-  S.push({cap:'Then: your test in Lindner '+room,sub:'Leave Tangeman by the northeast doors and walk to Lindner Hall.',path:R_NE_LIND,ms:8000,hl:'lind'});
-  S.push({cap:'Lindner Hall main entrance',sub:'Room '+room+' is on the 1st floor. Use the Test tab for the inside route.',hold:LIND,ms:3500,hl:'lind',zoom:18.2});
+  S.push({cap:'Your '+rp+': Great Hall',sub:'Inside Tangeman, the Great Hall is on the 4th floor. Use the '+(rp==='presentation'?'Presentation':'Role play')+' tab for the inside route.',hold:[-84.5175,39.13155],ms:4200,hl:'tuc',zoom:16.8});
+  S.push({cap:'Then: your test in Lindner '+room,sub:'Leave Tangeman by the northeast doors and walk to Lindner Hall. Be in Room '+room+' by 10:30 AM.',path:R_NE_LIND,ms:8000,hl:'lind'});
+  S.push({cap:'Lindner Hall main entrance',sub:'Room '+room+' is on the 1st floor. Use the Test tab for the inside route.',hold:LIND,ms:3500,hl:'lind',zoom:16.8});
  } else if(kind==='tuc'){
-  S.push({cap:'Everything is in Tangeman',sub:'Your '+rp+' (Great Hall) and your test (Room '+room+') are both on the 4th floor. Do NOT go to Lindner.',hold:[-84.5175,39.13155],ms:5200,hl:'tuc',zoom:18.2});
+  S.push({cap:'Everything is in Tangeman',sub:'Your '+rp+' (Great Hall) and your test (Room '+room+') are both on the 4th floor. Do NOT go to Lindner.',hold:[-84.5175,39.13155],ms:5200,hl:'tuc',zoom:16.8});
  } else if(kind==='notest'){
-  S.push({cap:'Your '+rp+': Great Hall',sub:'Inside Tangeman, the Great Hall is on the 4th floor.',hold:[-84.5175,39.13155],ms:4500,hl:'tuc',zoom:18.2});
+  S.push({cap:'Your '+rp+': Great Hall',sub:'Inside Tangeman, the Great Hall is on the 4th floor.',hold:[-84.5175,39.13155],ms:4500,hl:'tuc',zoom:16.8});
  } else {
-  S.push({cap:'Tangeman (TUC): Great Hall',sub:'All role plays and presentations are in the Great Hall, 4th floor. TUC test rooms 417 and 419 are on the same floor.',hold:[-84.5175,39.13155],ms:4500,hl:'tuc',zoom:18.2});
+  S.push({cap:'Tangeman (TUC): Great Hall',sub:'All role plays and presentations are in the Great Hall, 4th floor. TUC test rooms 417 and 419 are on the same floor.',hold:[-84.5175,39.13155],ms:4500,hl:'tuc',zoom:16.8});
   S.push({cap:'Lindner Hall tests (Rooms 1210 and 1225)',sub:'Leave Tangeman by the northeast doors and walk to Lindner Hall.',path:R_NE_LIND,ms:8000,hl:'lind'});
  }
+ S.push({cap:'Your whole route',sub:'Red line = where you walk. Tap Replay flyover to watch again.',fit:true,ms:1500});
  return S;
 }
 
@@ -305,7 +307,7 @@ window.DecaFlyover=function(el,opts){
  if(!window.maplibregl){el.hidden=true;return}
  try{var _c=document.createElement('canvas');if(!(_c.getContext('webgl2')||_c.getContext('webgl'))){el.hidden=true;return}}catch(e){el.hidden=true;return}
  var cap=el.querySelector('.fly-cap'),sub=el.querySelector('.fly-sub'),btn=el.querySelector('.fly-play');
- var map=new maplibregl.Map({container:el.querySelector('.fly-map'),style:{version:8,glyphs:'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',sources:{sat:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics | Buildings &amp; paths &copy; OpenStreetMap contributors'}},layers:[{id:'sat',type:'raster',source:'sat'}]},center:DROP,zoom:17,pitch:50,bearing:60,interactive:false,attributionControl:{compact:true}});
+ var map=new maplibregl.Map({container:el.querySelector('.fly-map'),style:{version:8,glyphs:'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',sources:{sat:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics | Buildings &amp; paths &copy; OpenStreetMap contributors'}},layers:[{id:'sat',type:'raster',source:'sat'}]},bounds:[[-84.5202,39.1305],[-84.5128,39.1350]],fitBoundsOptions:{padding:28},pitch:0,bearing:0,interactive:false,attributionControl:{compact:true}});
  var S=scenes(opts.kind||'general',opts.room||'',opts.rp||'role play'),run=0,loaded=false;
  function fc(pts){return {type:'Feature',geometry:{type:'LineString',coordinates:pts}}}
  map.on('error',function(){});
@@ -335,6 +337,7 @@ window.DecaFlyover=function(el,opts){
   function next(){
    if(my!==run)return; if(i>=S.length){btn.textContent='Replay flyover';return}
    var s=S[i++]; cap.textContent=s.cap; sub.textContent=s.sub; setHl(s.hl);
+   if(s.fit){map.fitBounds([[-84.5202,39.1305],[-84.5128,39.1350]],{padding:28,bearing:0,pitch:20,duration:1600});setTimeout(next,s.ms);return}
    if(s.hold){map.easeTo({center:s.hold,zoom:s.zoom||17.5,pitch:s.pitch||60,bearing:brg,duration:1400});setTimeout(next,s.ms);return}
    var t0=performance.now(), pts=s.path;
    map.setPaintProperty('cur','line-dasharray',s.dashed?[1,1.5]:[1,0]);
@@ -344,7 +347,7 @@ window.DecaFlyover=function(el,opts){
     var a=along(pts,e), b=along(pts,Math.min(1,e+0.08));
     var want=bearing(a.p,b.p); if(dist(a.p,b.p)>1) brg=brg+angDiff(brg,want)*0.06;
     map.getSource('cur').setData(fc(partial(pts,e)));
-    map.jumpTo({center:a.p,zoom:18,pitch:52,bearing:brg});
+    map.jumpTo({center:a.p,zoom:16.5,pitch:38,bearing:brg});
     if(k<1)requestAnimationFrame(f); else {done.push(fc(pts));map.getSource('done').setData({type:'FeatureCollection',features:done});next()}
    })(t0);
   }
