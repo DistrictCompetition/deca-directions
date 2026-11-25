@@ -46,12 +46,13 @@ h1{font-size:1.5rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .route{stroke:var(--route);stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 @media (max-width:420px){.tabs{gap:6px}.tab{padding:10px 8px;font-size:.85rem}.dirs{grid-template-columns:1fr}}
-[hidden]{display:none!important}.waitbox{background:#fff3d6;border:2px solid #c98a00;border-radius:10px;padding:10px 12px;margin:10px 0;color:#3d2600;font-size:.95rem;line-height:1.35}.waitbox b{display:block;font-size:.8rem;letter-spacing:.04em;color:#7a3e00;margin-top:4px}.waitbox b:first-child{margin-top:0}</style></head><body>
+[hidden]{display:none!important}.fly{border:1px solid #d7dbe3;border-radius:12px;overflow:hidden;background:#fff;margin:10px 0}.fly-map{height:280px;background:#e8ecf2}.fly-txt{padding:10px 12px}.fly-k{font-size:.72rem;font-weight:800;letter-spacing:.06em;color:#e11d48}.fly-cap{font-weight:800;font-size:1.05rem;margin-top:2px}.fly-sub{font-size:.92rem;color:#333;margin-top:2px;min-height:2.6em}.fly-play{margin-top:8px;border:0;background:#0f172a;color:#fff;font-weight:700;padding:8px 14px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer}.waitbox{background:#fff3d6;border:2px solid #c98a00;border-radius:10px;padding:10px 12px;margin:10px 0;color:#3d2600;font-size:.95rem;line-height:1.35}.waitbox b{display:block;font-size:.8rem;letter-spacing:.04em;color:#7a3e00;margin-top:4px}.waitbox b:first-child{margin-top:0}</style></head><body>
 <div class="wrap">
  <div><h1>Getting around at UC</h1><p class="sub" id="sub">Ohio DECA Districts 6, 12 &amp; 13 · Dec 8–9, 2026 · Tangeman University Center and Carl H. Lindner Hall</p></div>
  <div class="banner" id="who" hidden></div>
  <div class="waitbox" id="waitbox" hidden></div>
  <div class="alert" id="tucalert" role="alert" hidden></div>
+ <div class="fly" id="fly" hidden><div class="fly-map"></div><div class="fly-txt"><div class="fly-k">CAMPUS FLYOVER · FROM THE BUS</div><div class="fly-cap">Loading map…</div><div class="fly-sub"></div><button class="fly-play" type="button">Replay flyover</button></div></div>
  <div class="tabs" role="tablist" aria-label="Directions">
   <button class="tab" role="tab" id="tt" aria-selected="true" aria-controls="pt"><span id="ttl">Testing</span><small id="tts">Lindner 1210/1225 · TUC 417/419</small></button>
   <button class="tab" role="tab" id="tr" aria-selected="false" aria-controls="pr"><span id="trl">Role play</span><small>Tangeman, Great Hall</small></button>
@@ -85,7 +86,7 @@ h1{font-size:1.5rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
  <section class="panel" id="pr" role="tabpanel" aria-labelledby="tr" hidden><div class="col">
   <div class="stage" id="rstage"></div>
   <ol class="steps" id="sr"></ol>
-  <p class="note">Tangeman University Center (TUC), 2766 UC MainStreet. Great Hall is TUC 465 (400 Level / 4th floor, South Wing). Entering at the 300 Level (MainStreet Pillars) puts you 1 floor up: go up 1 more floor. Diagram only, not to scale.</p>
+  <p class="note">Tangeman University Center (TUC), 2766 UC MainStreet. Great Hall is TUC 465 (400 Level / 4th floor, South Wing). The west entrance (by the Bearcat store) puts you on the 300 Level; go up 1 floor. Diagram only, not to scale.</p>
   <div class="row"><button class="btn fill" id="rr">Replay</button><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Tangeman+University+Center+2766+UC+MainStreet+Cincinnati+OH">Open Tangeman in Google Maps</a></div>
  </div></section>
 </div>
@@ -117,34 +118,34 @@ function Player(ol,render,dur){
 
 /* ---------- Tangeman cross-section ---------- */
 function tucSVG(label,idp){
- return '<svg viewBox="0 0 600 440" role="img" aria-label="Tangeman University Center: start on the 200 Level (2nd floor) at Bearcats Plaza, go up two floors to the 400 Level (4th floor)">'+
+ return '<svg viewBox="0 0 600 440" role="img" aria-label="Tangeman University Center: start at the west entrance on the 300 Level (3rd floor) by the Bearcat store, go up one floor to the 400 Level (4th floor)">'+
  '<rect x="60" y="30" width="480" height="380" rx="6" fill="none" stroke="var(--muted)" stroke-width="3"/>'+
  '<g font-family="Inter,sans-serif" font-weight="700" fill="var(--ink)">'+
  '<rect x="60" y="30" width="480" height="95" fill="var(--blue-soft)"/>'+
  '<line x1="60" x2="540" y1="125" y2="125" stroke="var(--muted)" stroke-width="2"/><line x1="60" x2="540" y1="220" y2="220" stroke="var(--muted)" stroke-width="2"/><line x1="60" x2="540" y1="315" y2="315" stroke="var(--muted)" stroke-width="2"/>'+
  '<text x="80" y="58" font-size="18">400 Level · 4th floor</text><text x="80" y="100" font-size="28" fill="var(--blue)">'+label+'</text>'+
- '<text x="80" y="162" font-size="17" fill="var(--muted)">300 Level · 3rd floor</text><text x="80" y="186" font-size="14" fill="var(--muted)" font-weight="500">UC MainStreet Pillars</text>'+
- '<text x="80" y="257" font-size="17">200 Level · 2nd floor</text><text x="80" y="281" font-size="14" font-weight="500" fill="var(--route)">START: Bearcats Plaza / Food Court</text>'+
+ '<text x="80" y="162" font-size="17">300 Level · 3rd floor</text><text x="80" y="186" font-size="14" font-weight="500" fill="var(--route)">START: West entrance (Bearcat store)</text>'+
+ '<text x="80" y="257" font-size="17" fill="var(--muted)">200 Level · 2nd floor</text><text x="80" y="281" font-size="14" fill="var(--muted)" font-weight="500">Bearcats Plaza / Food Court</text>'+
  '<text x="80" y="352" font-size="17" fill="var(--muted)">100 Level · 1st floor</text></g>'+
  '<rect x="400" y="30" width="110" height="380" fill="none" stroke="var(--muted)" stroke-dasharray="6 6" stroke-width="2"/>'+
  '<text x="455" y="428" font-size="14" text-anchor="middle" fill="var(--muted)" font-family="Inter,sans-serif">elevators / stairs</text>'+
- '<g id="'+idp+'l" opacity="0"><rect x="418" y="232" width="74" height="60" rx="6" fill="var(--navy)" id="'+idp+'c"/><text x="455" y="270" font-size="20" text-anchor="middle" fill="var(--bg)" font-weight="800" font-family="Inter,sans-serif" id="'+idp+'t">200</text></g>'+
- '<g id="'+idp+'w"><circle r="16" fill="#fff" stroke="var(--route)" stroke-width="7" cx="200" cy="262"/></g></svg>';
+ '<g id="'+idp+'l" opacity="0"><rect x="418" y="137" width="74" height="60" rx="6" fill="var(--navy)" id="'+idp+'c"/><text x="455" y="175" font-size="20" text-anchor="middle" fill="var(--bg)" font-weight="800" font-family="Inter,sans-serif" id="'+idp+'t">300</text></g>'+
+ '<g id="'+idp+'w"><circle r="16" fill="#fff" stroke="var(--route)" stroke-width="7" cx="200" cy="167"/></g></svg>';
 }
 function tucRender(idp){
  return function(p){
   var w=$(idp+'w'),l=$(idp+'l'),c=$(idp+'c'),t=$(idp+'t');if(!w)return;
   var dx=0,k=0;
   if(p<.3){dx=255*ease(p/.3);k=0}else if(p<.85){dx=255;k=ease((p-.3)/.55)}else{dx=255;k=1}
-  var y=232-190*k;c.setAttribute('y',y);t.setAttribute('y',y+38);
-  t.textContent=k<.34?'200':k<.67?'300':'400';
+  var y=137-95*k;c.setAttribute('y',y);t.setAttribute('y',y+38);
+  t.textContent=k<.5?'300':'400';
   l.setAttribute('opacity',p>0?1:0);
-  w.setAttribute('transform','translate('+dx+','+(-190*k)+')');
+  w.setAttribute('transform','translate('+dx+','+(-95*k)+')');
  };
 }
 function tucSteps(dest,where){return[
- ['Enter Tangeman University Center (TUC) on the 200 Level','Come in at Bearcats Plaza / Food Court, which is the 2nd floor.',0],
- ['Take the elevator or stairs up 2 floors','Go 200 → 300 → 400 Level. Get off on the 400 Level (4th floor).',.5],
+ ['Enter Tangeman University Center (TUC) at the west entrance','This puts you on the 300 Level (3rd floor), by the Bearcat store.',0],
+ ['Take the elevator or stairs up 1 floor','Go up to the 400 Level (4th floor) and get off there.',.5],
  [dest,where,.92]]}
 $('rstage').innerHTML=tucSVG('GREAT HALL','a');
 var pr=Player($('sr'),tucRender('a'),6500);
@@ -230,6 +231,7 @@ function init(){
    $('tt').hidden=true;$('pt').hidden=true;$('tucalert').hidden=true;
    $('sub').textContent='Ohio DECA Districts 6, 12 & 13 · Dec 8–9, 2026 · Tangeman University Center';
    $('tr').querySelector('span').textContent=pres?'Your presentation':'Your role play';
+   FLYKIND='notest';FLYRP=rpw;
    waitBox([['WHEN YOU ARRIVE',early?'Go straight to the Great Hall (TUC 465, 4th floor).':WT+'your check-in time ('+prep+').']]);
    show(1,true);return;
   }
@@ -243,6 +245,7 @@ function init(){
   $('ttl').textContent=(testFirst?'1':'2')+' · Your test';
   $('trl').textContent=(testFirst?'2':'1')+' · '+(pres?'Your presentation':'Your role play');
   tab=testFirst?'testing':'roleplay';
+  FLYROOM=r;FLYRP=rpw;FLYKIND=tuc?'tuc':(testFirst?'testfirst_lindner':'rpfirst_lindner');
   if(testFirst)waitBox([['WHEN YOU ARRIVE','Go straight to your test room ('+(tuc?'TUC ':'Lindner ')+r+').'],['AFTER YOUR TEST','Go to Tangeman (TUC). '+WT+'your check-in time ('+prep+').']]);
   else waitBox([['WHEN YOU ARRIVE',early?'Go straight to the Great Hall (TUC 465, 4th floor).':WT+'your check-in time ('+prep+').'],['AFTER YOUR '+rpw.toUpperCase(),WT+'it is time to go to your test.']]);
  }
@@ -253,4 +256,109 @@ init();
 window.addEventListener('hashchange',init);
 if(reduceMQ&&reduceMQ.addEventListener)reduceMQ.addEventListener('change',function(){if(reduce()){pl.stop();pr.stop()}});
 })();
-</script></body></html>
+</script><script>
+/* Campus flyover for the DECA directions page.
+   Map data: OpenStreetMap contributors, tiles by OpenFreeMap, rendering by MapLibre GL.
+   Routes were computed along mapped OpenStreetMap footpaths (Nov 25, 2026). */
+(function(){
+var DROP=[-84.519538,39.131215], WEST=[-84.5177179,39.1317738], NE=[-84.5171206,39.1319637], LIND=[-84.5146273,39.1335269];
+var R_DROP_WEST=[DROP,[-84.519442,39.131207],[-84.519216,39.131193],[-84.51889,39.131174],[-84.518863,39.131199],[-84.518765,39.131266],[-84.518689,39.1313],[-84.51865,39.131321],[-84.518575,39.131352],[-84.518431,39.131413],[-84.518068,39.131569],[-84.517885,39.13165],[-84.517873,39.131782],[-84.517796,39.131778],WEST];
+var R_NE_LIND=[NE,[-84.517104,39.131974],[-84.517057,39.132088],[-84.516939,39.132115],[-84.516781,39.132151],[-84.51644,39.132159],[-84.516263,39.132184],[-84.516131,39.132231],[-84.515883,39.132334],[-84.515854,39.132389],[-84.515665,39.132484],[-84.515539,39.132566],[-84.51537,39.132726],[-84.515271,39.132837],[-84.515071,39.133139],[-84.515044,39.133386],[-84.51485,39.13343],[-84.514707,39.133443],[-84.514632,39.133442],LIND];
+var R_THROUGH=[WEST,[-84.5175,39.13185],[-84.5173,39.13193],NE];
+var TUC=[[-84.5179213,39.131092],[-84.5178526,39.1310654],[-84.5178245,39.1310568],[-84.5177496,39.1310321],[-84.517638,39.1310054],[-84.517535,39.1309988],[-84.5175179,39.1310188],[-84.5174492,39.1309988],[-84.5174219,39.131044],[-84.5173837,39.1310294],[-84.5173406,39.1310975],[-84.5173157,39.1311451],[-84.5172652,39.1312211],[-84.5173024,39.1312346],[-84.5172655,39.1312942],[-84.5173892,39.1313421],[-84.5174265,39.1313574],[-84.5174172,39.1314291],[-84.5173062,39.13144],[-84.5172323,39.1314599],[-84.5171797,39.1314827],[-84.5171327,39.1315129],[-84.5171163,39.1315239],[-84.5171428,39.1315452],[-84.5171149,39.1315715],[-84.5170922,39.1315994],[-84.5170723,39.1316322],[-84.5170599,39.1316616],[-84.5170514,39.1316819],[-84.5170472,39.131703],[-84.5170427,39.1317288],[-84.5170421,39.1317556],[-84.5170538,39.1318195],[-84.5170629,39.1318442],[-84.5170751,39.1318655],[-84.5171015,39.1319031],[-84.5170762,39.1319173],[-84.5170922,39.1319376],[-84.5171206,39.1319637],[-84.5171446,39.131982],[-84.5171747,39.1320004],[-84.5171966,39.1319778],[-84.5172501,39.1320072],[-84.5173088,39.1320263],[-84.5173492,39.1320326],[-84.5174142,39.132037],[-84.5174512,39.1320362],[-84.5174855,39.1320323],[-84.5175131,39.1320281],[-84.5175427,39.1320214],[-84.5175918,39.1320055],[-84.5176052,39.1319987],[-84.5176534,39.1319735],[-84.5176552,39.1319688],[-84.5176513,39.1319613],[-84.5176669,39.1318227],[-84.5177126,39.1318258],[-84.5177179,39.1317738],[-84.5177248,39.1317147],[-84.5176789,39.1317115],[-84.5176956,39.1315688],[-84.5177013,39.131565],[-84.5177031,39.1315638],[-84.5177044,39.1315572],[-84.517638,39.1315114],[-84.5176619,39.1314806],[-84.5176895,39.1314449],[-84.5177668,39.1314782],[-84.5178097,39.1314782],[-84.5178526,39.1314582],[-84.5178869,39.1314515],[-84.5179041,39.1314249],[-84.5179213,39.1312518],[-84.5178354,39.1312185],[-84.5179213,39.131092]];
+var LINDNER=[[-84.5149746,39.1335751],[-84.5144129,39.1334971],[-84.5143995,39.133445],[-84.5140287,39.133452],[-84.5139908,39.133929],[-84.5139653,39.1339328],[-84.513937,39.1341963],[-84.5145844,39.1341955],[-84.5145957,39.1342332],[-84.5148619,39.1342339],[-84.5149079,39.1338002],[-84.5149503,39.1337928],[-84.5149746,39.1335751]];
+function rev(a){return a.slice().reverse()}
+function dist(a,b){var m=Math.cos(a[1]*Math.PI/180);var dx=(b[0]-a[0])*m,dy=b[1]-a[1];return Math.sqrt(dx*dx+dy*dy)*111320}
+function bearing(a,b){var m=Math.cos(a[1]*Math.PI/180);return (Math.atan2((b[0]-a[0])*m,b[1]-a[1])*180/Math.PI+360)%360}
+function along(pts,f){var L=[0];for(var i=1;i<pts.length;i++)L.push(L[i-1]+dist(pts[i-1],pts[i]));var t=f*L[L.length-1];for(i=1;i<pts.length;i++){if(L[i]>=t){var s=(t-L[i-1])/((L[i]-L[i-1])||1);return {p:[pts[i-1][0]+s*(pts[i][0]-pts[i-1][0]),pts[i-1][1]+s*(pts[i][1]-pts[i-1][1])],i:i}}}return {p:pts[pts.length-1],i:pts.length-1}}
+function partial(pts,f){var a=along(pts,f);return pts.slice(0,a.i).concat([a.p])}
+function angDiff(a,b){return ((b-a+540)%360)-180}
+
+/* Build the scene list for this student. kind: 'testfirst_lindner' | 'rpfirst_lindner' | 'tuc' | 'notest' | 'general' */
+function scenes(kind,room,rp){
+ var S=[];
+ S.push({cap:'Bus drop-off',sub:'Your bus drops you here.',hold:DROP,ms:2600,zoom:17.3,pitch:55});
+ S.push({cap:'Walk to Tangeman (TUC)',sub:'Follow the path to the west entrance of Tangeman University Center (3rd floor, by the Bearcat store).',path:R_DROP_WEST,ms:7000,hl:'tuc'});
+ if(kind==='testfirst_lindner'){
+  S.push({cap:'Walk through Tangeman',sub:'Go through the building to the northeast doors.',path:R_THROUGH,dashed:true,ms:3500,hl:'tuc'});
+  S.push({cap:'Walk to Lindner Hall',sub:'Head to the Lindner Hall main entrance for your test in Room '+room+'.',path:R_NE_LIND,ms:8000,hl:'lind'});
+  S.push({cap:'Your test: Lindner '+room,sub:'Room '+room+' is on the 1st floor. Use the Test tab for the inside route.',hold:LIND,ms:3200,hl:'lind',zoom:18.2});
+  S.push({cap:'After your test',sub:'Walk back to Tangeman (northeast doors).',path:rev(R_NE_LIND),ms:7000,hl:'tuc'});
+  S.push({cap:'Your '+rp+': Great Hall',sub:'Wait on the 2nd or 3rd floor of Tangeman until your check-in time, then go up to the Great Hall (4th floor).',hold:[-84.5175,39.13155],ms:4200,hl:'tuc',zoom:18.2});
+ } else if(kind==='rpfirst_lindner'){
+  S.push({cap:'Your '+rp+': Great Hall',sub:'Inside Tangeman, the Great Hall is on the 4th floor. Use the '+(rp==='presentation'?'Presentation':'Role play')+' tab for the inside route.',hold:[-84.5175,39.13155],ms:4200,hl:'tuc',zoom:18.2});
+  S.push({cap:'Then: your test in Lindner '+room,sub:'Leave Tangeman by the northeast doors and walk to Lindner Hall.',path:R_NE_LIND,ms:8000,hl:'lind'});
+  S.push({cap:'Lindner Hall main entrance',sub:'Room '+room+' is on the 1st floor. Use the Test tab for the inside route.',hold:LIND,ms:3500,hl:'lind',zoom:18.2});
+ } else if(kind==='tuc'){
+  S.push({cap:'Everything is in Tangeman',sub:'Your '+rp+' (Great Hall) and your test (Room '+room+') are both on the 4th floor. Do NOT go to Lindner.',hold:[-84.5175,39.13155],ms:5200,hl:'tuc',zoom:18.2});
+ } else if(kind==='notest'){
+  S.push({cap:'Your '+rp+': Great Hall',sub:'Inside Tangeman, the Great Hall is on the 4th floor.',hold:[-84.5175,39.13155],ms:4500,hl:'tuc',zoom:18.2});
+ } else {
+  S.push({cap:'Tangeman (TUC): Great Hall',sub:'All role plays and presentations are in the Great Hall, 4th floor. TUC test rooms 417 and 419 are on the same floor.',hold:[-84.5175,39.13155],ms:4500,hl:'tuc',zoom:18.2});
+  S.push({cap:'Lindner Hall tests (Rooms 1210 and 1225)',sub:'Leave Tangeman by the northeast doors and walk to Lindner Hall.',path:R_NE_LIND,ms:8000,hl:'lind'});
+ }
+ return S;
+}
+
+window.DecaFlyover=function(el,opts){
+ opts=opts||{};
+ if(!window.maplibregl){el.hidden=true;return}
+ try{var _c=document.createElement('canvas');if(!(_c.getContext('webgl2')||_c.getContext('webgl'))){el.hidden=true;return}}catch(e){el.hidden=true;return}
+ var cap=el.querySelector('.fly-cap'),sub=el.querySelector('.fly-sub'),btn=el.querySelector('.fly-play');
+ var map=new maplibregl.Map({container:el.querySelector('.fly-map'),style:{version:8,glyphs:'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',sources:{sat:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics | Buildings &amp; paths &copy; OpenStreetMap contributors'}},layers:[{id:'sat',type:'raster',source:'sat'}]},center:DROP,zoom:17,pitch:50,bearing:60,interactive:false,attributionControl:{compact:true}});
+ var S=scenes(opts.kind||'general',opts.room||'',opts.rp||'role play'),run=0,loaded=false;
+ function fc(pts){return {type:'Feature',geometry:{type:'LineString',coordinates:pts}}}
+ map.on('error',function(){});
+ map.on('load',function(){
+  loaded=true;
+  map.addSource('tuc',{type:'geojson',data:{type:'Feature',geometry:{type:'Polygon',coordinates:[TUC]}}});
+  map.addSource('lind',{type:'geojson',data:{type:'Feature',geometry:{type:'Polygon',coordinates:[LINDNER]}}});
+  map.addLayer({id:'tuc-x',type:'fill',source:'tuc',paint:{'fill-color':'#14b8a6','fill-opacity':0.25}});map.addLayer({id:'tuc-o',type:'line',source:'tuc',paint:{'line-color':'#5eead4','line-width':3}});
+  map.addLayer({id:'lind-x',type:'fill',source:'lind',paint:{'fill-color':'#3b82f6','fill-opacity':0.25}});map.addLayer({id:'lind-o',type:'line',source:'lind',paint:{'line-color':'#93c5fd','line-width':3}});
+  map.addSource('done',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  map.addSource('cur',{type:'geojson',data:fc([DROP,DROP])});
+  map.addLayer({id:'done',type:'line',source:'done',paint:{'line-color':'#e11d48','line-width':6,'line-opacity':0.55},layout:{'line-cap':'round','line-join':'round'}});
+  map.addLayer({id:'cur',type:'line',source:'cur',paint:{'line-color':'#ff2d55','line-width':8},layout:{'line-cap':'round','line-join':'round'}});
+  map.addSource('pins',{type:'geojson',data:{type:'FeatureCollection',features:[
+   {type:'Feature',properties:{t:'BUS DROP-OFF'},geometry:{type:'Point',coordinates:DROP}},
+   {type:'Feature',properties:{t:'TUC WEST ENTRANCE'},geometry:{type:'Point',coordinates:WEST}},
+   {type:'Feature',properties:{t:'TUC NE DOORS'},geometry:{type:'Point',coordinates:NE}},
+   {type:'Feature',properties:{t:'LINDNER MAIN ENTRANCE'},geometry:{type:'Point',coordinates:LIND}}]}});
+  map.addLayer({id:'pins',type:'circle',source:'pins',paint:{'circle-radius':7,'circle-color':'#fff','circle-stroke-color':'#e11d48','circle-stroke-width':4}});
+  map.addLayer({id:'pin-t',type:'symbol',source:'pins',layout:{'text-field':['get','t'],'text-font':['Noto Sans Bold'],'text-size':12,'text-offset':[0,-1.4],'text-anchor':'bottom'},paint:{'text-color':'#111','text-halo-color':'#fff','text-halo-width':2}});
+  if(opts.autoplay!==false)play();
+ });
+ function setHl(h){if(!loaded)return;map.setPaintProperty('tuc-x','fill-opacity',h==='lind'?0.08:0.3);map.setPaintProperty('lind-x','fill-opacity',h==='tuc'?0.08:0.3)}
+ function play(){
+  if(!loaded)return; var my=++run, done=[], i=0, brg=map.getBearing();
+  map.getSource('done').setData({type:'FeatureCollection',features:[]});
+  function next(){
+   if(my!==run)return; if(i>=S.length){btn.textContent='Replay flyover';return}
+   var s=S[i++]; cap.textContent=s.cap; sub.textContent=s.sub; setHl(s.hl);
+   if(s.hold){map.easeTo({center:s.hold,zoom:s.zoom||17.5,pitch:s.pitch||60,bearing:brg,duration:1400});setTimeout(next,s.ms);return}
+   var t0=performance.now(), pts=s.path;
+   map.setPaintProperty('cur','line-dasharray',s.dashed?[1,1.5]:[1,0]);
+   (function f(now){
+    if(my!==run)return;
+    var k=Math.min(1,(now-t0)/s.ms), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    var a=along(pts,e), b=along(pts,Math.min(1,e+0.08));
+    var want=bearing(a.p,b.p); if(dist(a.p,b.p)>1) brg=brg+angDiff(brg,want)*0.06;
+    map.getSource('cur').setData(fc(partial(pts,e)));
+    map.jumpTo({center:a.p,zoom:18,pitch:52,bearing:brg});
+    if(k<1)requestAnimationFrame(f); else {done.push(fc(pts));map.getSource('done').setData({type:'FeatureCollection',features:done});next()}
+   })(t0);
+  }
+  btn.textContent='Playing…'; next();
+ }
+ btn.onclick=function(){play()};
+ return {play:play};
+};
+})();
+
+window.FLYKIND=window.FLYKIND||"general";window.FLYROOM=window.FLYROOM||"";window.FLYRP=window.FLYRP||"role play";var FLYSTARTED=false;
+function startFly(){if(FLYSTARTED)return;FLYSTARTED=true;var el=document.getElementById("fly");
+ var l=document.createElement("link");l.rel="stylesheet";l.href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css";document.head.appendChild(l);
+ var sc=document.createElement("script");sc.src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js";sc.onload=function(){try{el.hidden=false;DecaFlyover(el,{kind:FLYKIND,room:FLYROOM,rp:FLYRP})}catch(e){el.hidden=true}};sc.onerror=function(){el.hidden=true};document.head.appendChild(sc)}
+if(document.readyState==="complete")startFly();else window.addEventListener("load",startFly);
+</script>
+</body></html>
