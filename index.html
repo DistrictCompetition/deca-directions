@@ -46,10 +46,11 @@ h1{font-size:1.5rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .route{stroke:var(--route);stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 @media (max-width:420px){.tabs{gap:6px}.tab{padding:10px 8px;font-size:.85rem}.dirs{grid-template-columns:1fr}}
-[hidden]{display:none!important}</style></head><body>
+[hidden]{display:none!important}.waitbox{background:#fff3d6;border:2px solid #c98a00;border-radius:10px;padding:10px 12px;margin:10px 0;color:#3d2600;font-size:.95rem;line-height:1.35}.waitbox b{display:block;font-size:.8rem;letter-spacing:.04em;color:#7a3e00;margin-top:4px}.waitbox b:first-child{margin-top:0}</style></head><body>
 <div class="wrap">
  <div><h1>Getting around at UC</h1><p class="sub" id="sub">Ohio DECA Districts 6, 12 &amp; 13 · Dec 8–9, 2026 · Tangeman University Center and Carl H. Lindner Hall</p></div>
  <div class="banner" id="who" hidden></div>
+ <div class="waitbox" id="waitbox" hidden></div>
  <div class="alert" id="tucalert" role="alert" hidden></div>
  <div class="tabs" role="tablist" aria-label="Directions">
   <button class="tab" role="tab" id="tt" aria-selected="true" aria-controls="pt"><span id="ttl">Testing</span><small id="tts">Lindner 1210/1225 · TUC 417/419</small></button>
@@ -216,8 +217,11 @@ function init(){
  var name=clean(Q.get('name'),40),prep=clean(Q.get('prep'),20),test=clean(Q.get('test'),20);
  if(name||prep||test){var b=$('who');b.hidden=false;b.textContent='';var a=document.createElement('div');a.textContent=name?('Hi '+name+'!'):'Your times';b.appendChild(a);
   var s=document.createElement('small');var _pp=prep?((Q.get('k')==='p'?'Check-in for presentation at ':'Check-in for role play at ')+prep):'',_tt=test?('Test: '+test):'';function _m(t){var m=String(t||'').match(/(\d{1,2}):(\d{2})/);if(!m)return 9999;var h=+m[1];if(h<7)h+=12;return h*60+(+m[2])}s.textContent=(test&&_m(test)<=_m(prep)?[_tt,_pp]:[_pp,_tt]).filter(Boolean).join('  ·  ');b.appendChild(s)}
- var pres=Q.get('k')==='p';
+ var pres=Q.get('k')==='p',early=Q.get('f')==='1',rpw=pres?'presentation':'role play';
  PERSONAL=!!(name||prep||test);
+ var WT='Wait on the 2nd or 3rd floor of Tangeman (TUC) until ';
+ function waitBox(items){var w=$('waitbox');w.textContent='';items.forEach(function(it){var h=document.createElement('b');h.textContent=it[0];w.appendChild(h);w.appendChild(document.createTextNode(it[1]))});w.hidden=false}
+ if(!PERSONAL)waitBox([['WHERE TO GO WHEN YOU ARRIVE','Follow the WHEN YOU ARRIVE line on your timing card. Test first: go straight to your test room. Some early role plays: go straight to the Great Hall. Everyone else: wait on the 2nd or 3rd floor of Tangeman (TUC) until your check-in time.'],['BETWEEN EVENTS',WT+'your next event.']]);
  if(PERSONAL){
   var qr=Q.get('room')||'',hasTest=['1210','1225','417','419'].indexOf(qr)>=0;
   $('rooms').hidden=true;
@@ -226,6 +230,7 @@ function init(){
    $('tt').hidden=true;$('pt').hidden=true;$('tucalert').hidden=true;
    $('sub').textContent='Ohio DECA Districts 6, 12 & 13 · Dec 8–9, 2026 · Tangeman University Center';
    $('tr').querySelector('span').textContent=pres?'Your presentation':'Your role play';
+   waitBox([['WHEN YOU ARRIVE',early?'Go straight to the Great Hall (TUC 465, 4th floor).':WT+'your check-in time ('+prep+').']]);
    show(1,true);return;
   }
   r=qr;var tuc=isTUC(r);
@@ -238,6 +243,8 @@ function init(){
   $('ttl').textContent=(testFirst?'1':'2')+' · Your test';
   $('trl').textContent=(testFirst?'2':'1')+' · '+(pres?'Your presentation':'Your role play');
   tab=testFirst?'testing':'roleplay';
+  if(testFirst)waitBox([['WHEN YOU ARRIVE','Go straight to your test room ('+(tuc?'TUC ':'Lindner ')+r+').'],['AFTER YOUR TEST','Go to Tangeman (TUC). '+WT+'your check-in time ('+prep+').']]);
+  else waitBox([['WHEN YOU ARRIVE',early?'Go straight to the Great Hall (TUC 465, 4th floor).':WT+'your check-in time ('+prep+').'],['AFTER YOUR '+rpw.toUpperCase(),WT+'it is time to go to your test.']]);
  }
  setRoom(r,false);
  show(TABS.indexOf(tab),true);
